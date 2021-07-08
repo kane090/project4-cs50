@@ -1,0 +1,41 @@
+{% extends "network/layout.html" %}
+
+{% block title %}
+    {{ profile.username }}
+{% endblock %}
+
+{% block body %}
+    {{ profile.username|json_script:"username" }}
+    <div class="container-fluid">
+        {% if request.user == profile %}
+            <h2>Your Profile</h2>
+        {% else %}
+            <h2>{{ profile.username }}'s Profile</h2>
+            {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'follow' profile.username %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+                </form>
+            {% endif %}
+        {% endif %}
+        <br>
+        <h4>Followers: {{ followers }}</h4>
+        <h4>Following: {{ following }}</h4>
+        <br>
+        {% if request.user == profile %}
+            <h2>Your Posts</h2>
+        {% else %}
+            <h2>{{ profile.username }}'s Posts</h2>
+        {% endif %}
+        {% for post in posts %}
+            <div class="row mb-3">
+                <div class="col">
+                    {{ post.content }}
+                    <br><br>
+                    Posted by: <a href="{% url 'profile' post.poster.username %}"><strong>{{ post.poster.username }}</strong></a> on <strong>{{ post.created }}</strong> <br>
+                    Likes: {{ post.likes }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

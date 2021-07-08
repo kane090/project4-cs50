@@ -1,5 +1,30 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <h2>All Posts</h2>
+    <div class="container-fluid">
+        {% if user.is_authenticated %}
+            <div class="row mb-5">
+                <div id="new_post">
+                    <h3>New Post:</h3>
+                    <form action="{% url 'new_post' %}" method="POST">
+                        {% csrf_token %}
+                        <textarea required="true" maxlength="256" rows="4" cols="75" name="content"></textarea> <br>
+                        <input type="submit" class="btn btn-primary btn-sm" value="Post">
+                </div>
+            </div>
+        {% else %}
+            <br>
+        {% endif %}
+        {% for post in posts %}
+            <div class="row mb-3">
+                <div class="col">
+                    {{ post.content }}
+                    <br><br>
+                    Posted by: <a href="{% url 'profile' post.poster.username %}"><strong>{{ post.poster.username }}</strong></a> on <strong>{{ post.created }}</strong> <br>
+                    Likes: {{ post.likes }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

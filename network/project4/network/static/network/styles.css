@@ -1,0 +1,14 @@
+.body {
+    padding-left: 15px;
+    padding-top: 15px;
+}
+
+.row {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+#profile_info {
+    border: none;
+}
