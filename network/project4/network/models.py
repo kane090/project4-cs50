@@ -12,6 +12,13 @@ class Follow(models.Model):
 
     def __str__(self):
         return f"{self.user} follows {self.following}"
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user": self.user.username,
+            "following": self.following.username
+        }
 
 class Post(models.Model):
     poster = ForeignKey(User, on_delete=models.CASCADE, related_name="creator_of_post")
@@ -21,3 +28,12 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.poster}: {self.content}"
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "poster": self.poster.username,
+            "content": self.content,
+            "created": self.created.strftime("%b %d %Y, %I:%M %p"),
+            "likes": self.likes
+        }
