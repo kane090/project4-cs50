@@ -6,6 +6,10 @@ from django.db.models.fields.related import ForeignKey
 class User(AbstractUser):
     pass
 
+class Like(models.Model):
+    user = ForeignKey(User, on_delete=models.CASCADE, related_name="user_likes")
+    post = ForeignKey('Post', on_delete=models.CASCADE, related_name="post")
+
 class Follow(models.Model):
     user = ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
     following = ForeignKey(User, on_delete=models.CASCADE, related_name="following")

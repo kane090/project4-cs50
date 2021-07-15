@@ -139,13 +139,14 @@ def following(request, page_number):
 @csrf_exempt
 def edit(request, post_id):
     post = Post.objects.get(pk=post_id)
-    if request.method == "PUT":
-        data = json.loads(request.body)
-        content_to_save = data.get("content")
-        if post.content != content_to_save:
-            post.content = content_to_save
-            post.save()
-    return HttpResponse(status=204)
+    if request.user == post.poster:
+        if request.method == "PUT":
+            data = json.loads(request.body)
+            content_to_save = data["content"]
+            if post.content != content_to_save:
+                post.content = content_to_save
+                post.save()
+            return HttpResponse(status=204)
 
 
 def like(request, post_id):

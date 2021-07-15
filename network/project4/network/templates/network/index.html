@@ -13,7 +13,7 @@
                     <h3>New Post:</h3>
                     <form action="{% url 'new_post' %}" method="POST">
                         {% csrf_token %}
-                        <textarea maxlength="256" rows="4" cols="75" name="content"></textarea> <br>
+                        <textarea required="true" maxlength="256" rows="4" cols="75" name="content"></textarea> <br>
                         <input type="submit" class="btn btn-primary btn-sm" value="Post">
                 </div>
             </div>
@@ -27,8 +27,9 @@
                     Posted by: <a href="{% url 'profile' post.poster.username 1 %}"><strong>{{ post.poster.username }}</strong></a> on <strong>{{ post.created }}</strong> <br>
                     Likes: {{ post.likes }}
                     <br>
+                    <button type="button" id="like_{{ post.id }}" class="btn btn-outline-danger btn-sm" onclick="like_post(`{{ post.id }}`)">Like</button>
                     {% if request.user == post.poster %}
-                        <button id="edit_{{ post.id }}" class="btn btn-outline-primary btn-sm" onclick="edit_post('{{ post.id }}')">Edit</button>
+                        <button type="button" id="edit_{{ post.id }}" class="btn btn-outline-primary btn-sm" onclick="edit_post(`{{ post.id }}`)">Edit</button>
                     {% endif %}
                 </div>
             </div>
