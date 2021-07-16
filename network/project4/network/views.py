@@ -87,7 +87,7 @@ def new_post(request):
 
 def profile(request, user, page_number):
     profile_to_view = User.objects.get(username=user)
-    posts = Post.objects.filter(poster=profile_to_view)
+    posts = Post.objects.filter(poster=profile_to_view).order_by('id').reverse()
     p = Paginator(posts, 10)
     current_page = p.page(page_number)
     followers = Follow.objects.filter(following=profile_to_view).count()
@@ -147,7 +147,17 @@ def edit(request, post_id):
                 post.content = content_to_save
                 post.save()
             return HttpResponse(status=204)
+    else:
+        return render(request, "network/error.html")
 
-
+@csrf_exempt
 def like(request, post_id):
-    pass
+    post_object = Post.objects.get(pk=post_id)
+    current_user = request.user
+    if current_user not in post_object.likes.all():
+        post_object.likes.add(current_user)
+        post_object.save()
+    else:
+        post_object.likes.remove(current_user)
+        post_object.save()
+    return JsonResponse({"likes": post_object.likes.count()})

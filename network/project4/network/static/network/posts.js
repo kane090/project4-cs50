@@ -18,7 +18,6 @@ function edit_post(post_id) {
     text_area.parentNode.insertBefore(line_break, text_area.nextSibling);
 
     let button = document.querySelector(`#edit_${post_id}`);
-    button.setAttribute('type', 'button');
     button.id = `save_${post_id}`;
     button.onclick = function() {
         save_post(post_id);
@@ -51,7 +50,6 @@ function save_post(post_id) {
     post_div.removeChild(paragraph.nextSibling);
 
     let button = document.querySelector(`#save_${post_id}`);
-    button.setAttribute('type', 'button');
     button.id = `edit_${post_id}`;
     button.onclick = function() {
         edit_post(post_id);
@@ -60,11 +58,42 @@ function save_post(post_id) {
 }
 
 
-// function like_post(post_id) {
-    
-//     fetch(`/like/${post_id}`, {
-//         method: 'PUT',
-//         body: JSON.stringify({
-//         })
-//     })
-// }
+function update_likes(post_id) {
+
+    fetch(`/like/${post_id}`)
+    .then(response => response.json())
+    .then(result => {
+        // Updating likes
+        let likes_section = document.querySelector(`#likes_${post_id}`);
+        const like_number = result['likes'];
+        likes_section.innerHTML = `Likes: ${like_number}`;
+    });
+}
+
+
+function like_post(post_id) {
+
+    update_likes(post_id);
+
+    // Updating button
+    let like_button = document.querySelector(`#like_${post_id}`);
+    like_button.id = `unlike_${post_id}`;
+    like_button.onclick = function() {
+        unlike_post(post_id);
+    }
+    like_button.innerHTML = 'Unlike';
+}
+
+
+function unlike_post(post_id) {
+
+    update_likes(post_id);
+
+    // Updating button
+    let like_button = document.querySelector(`#unlike_${post_id}`);
+    like_button.id = `like_${post_id}`;
+    like_button.onclick = function() {
+        like_post(post_id);
+    }
+    like_button.innerHTML = 'Like';
+}
